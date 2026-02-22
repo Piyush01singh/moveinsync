@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: mdm-backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mdm
+    username: mdm_user
+    password: mdm_password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  cache:
+    cache-names: appVersions
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics,prometheus"
+  endpoint:
+    health:
+      show-details: always
+
+mdm:
+  security:
+    admin-username: ${MDM_ADMIN_USERNAME:admin}
+    admin-password: ${MDM_ADMIN_PASSWORD:admin123}
+    release-manager-username: ${MDM_RELEASE_MANAGER_USERNAME:release_manager}
+    release-manager-password: ${MDM_RELEASE_MANAGER_PASSWORD:release123}
+    product-head-username: ${MDM_PRODUCT_HEAD_USERNAME:product_head}
+    product-head-password: ${MDM_PRODUCT_HEAD_PASSWORD:product123}
+    device-api-key: ${MDM_DEVICE_API_KEY:moveinsync-device-key}
+  lifecycle:
+    max-retries: ${MDM_MAX_LIFECYCLE_RETRIES:3}
+  cache:
+    app-version-ttl-minutes: ${MDM_APP_VERSION_CACHE_TTL_MINUTES:10}
+    app-version-max-size: ${MDM_APP_VERSION_CACHE_MAX_SIZE:1000}
+  audit:
+    enforce-immutability: ${MDM_AUDIT_ENFORCE_IMMUTABILITY:true}
+
+logging:
+  level:
+    root: INFO
+    com.moveinsync.mdm: DEBUG

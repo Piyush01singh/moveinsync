@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:mdmtest;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+mdm:
+  security:
+    admin-username: admin
+    admin-password: admin123
+    device-api-key: moveinsync-device-key
+  lifecycle:
+    max-retries: 3
+  cache:
+    app-version-ttl-minutes: 10
+    app-version-max-size: 1000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics,prometheus"
