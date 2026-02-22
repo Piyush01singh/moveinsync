@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoveInSync MDM Console</title>
+    <link rel="stylesheet" href="./assets/dashboard.css">
+</head>
+<body>
+<div class="grain"></div>
+<main class="page-shell">
+    <header class="hero card panel-enter">
+        <div>
+            <p class="eyebrow">MoveInSync</p>
+            <h1>MDM Control Console</h1>
+            <p class="hero-copy">Operate releases, simulate device updates, and inspect system state without Postman.</p>
+        </div>
+        <div class="hero-pill">
+            <span class="live-dot"></span>
+            <span id="healthBadge">Not Checked</span>
+        </div>
+    </header>
+
+    <section class="card config panel-enter">
+        <h2>Connection Setup</h2>
+        <div class="form-grid four">
+            <label>Base URL
+                <input id="baseUrl" type="text" placeholder="http://localhost:8080">
+            </label>
+            <label>Admin Username
+                <input id="adminUser" type="text" placeholder="admin">
+            </label>
+            <label>Admin Password
+                <input id="adminPass" type="password" placeholder="admin123">
+            </label>
+            <label>Device API Key
+                <input id="deviceApiKey" type="text" placeholder="moveinsync-device-key">
+            </label>
+        </div>
+        <div class="button-row">
+            <button id="saveConfigBtn" class="btn btn-primary">Save Config</button>
+            <button id="checkHealthBtn" class="btn btn-secondary">Check Health</button>
+        </div>
+    </section>
+
+    <section class="layout">
+        <article class="card panel-enter">
+            <h2>Version Governance</h2>
+            <div class="stack">
+                <form id="createVersionForm">
+                    <h3>Create Version</h3>
+                    <div class="form-grid two">
+                        <label>Version Code<input name="versionCode" required placeholder="11.0.1"></label>
+                        <label>Version Name<input name="versionName" required placeholder="11.0.1"></label>
+                        <label>Supported OS Range<input name="supportedOsRange" placeholder="Android 12+"></label>
+                        <label>Customization Tag<input name="customizationTag" placeholder="enterprise"></label>
+                    </div>
+                    <label class="check"><input name="mandatory" type="checkbox"> Mandatory Update</label>
+                    <button class="btn btn-primary" type="submit">Create Version</button>
+                </form>
+
+                <form id="compatibilityForm">
+                    <h3>Create Compatibility Rule</h3>
+                    <div class="form-grid three">
+                        <label>From Version<input name="fromVersion" required placeholder="11.0.0"></label>
+                        <label>To Version<input name="toVersion" required placeholder="11.0.2"></label>
+                        <label>Mandatory Intermediate<input name="mandatoryIntermediate" placeholder="11.0.1"></label>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Save Rule</button>
+                </form>
+
+                <form id="scheduleForm">
+                    <h3>Create Schedule</h3>
+                    <div class="form-grid three">
+                        <label>From Version<input name="fromVersion" required placeholder="11.0.0"></label>
+                        <label>To Version<input name="toVersion" required placeholder="11.0.1"></label>
+                        <label>Rollout %<input name="rolloutPercentage" type="number" min="1" max="100" value="100"></label>
+                        <label>Target Region<input name="targetRegion" placeholder="Bangalore"></label>
+                        <label>Customization Tag<input name="customizationTag" placeholder="enterprise"></label>
+                        <label>Target Device Group<input name="targetDeviceGroup" placeholder="drivers-west"></label>
+                        <label>Scheduled Time<input name="scheduledTime" type="datetime-local"></label>
+                    </div>
+                    <label class="check"><input name="immediate" type="checkbox" checked> Immediate</label>
+                    <button class="btn btn-primary" type="submit">Create Schedule</button>
+                </form>
+
+                <form id="approveScheduleForm">
+                    <h3>Approve Schedule</h3>
+                    <div class="form-grid two">
+                        <label>Schedule ID<input name="scheduleId" type="number" required placeholder="1"></label>
+                        <label>Comment<input name="comment" placeholder="Optional approval note"></label>
+                    </div>
+                    <button class="btn btn-secondary" type="submit">Approve</button>
+                </form>
+            </div>
+        </article>
+
+        <article class="card panel-enter">
+            <h2>Device Simulator</h2>
+            <div class="stack">
+                <form id="heartbeatForm">
+                    <h3>Send Heartbeat</h3>
+                    <div class="form-grid two">
+                        <label>IMEI<input name="imeiNumber" required value="356789012349999"></label>
+                        <label>App Version<input name="appVersion" required placeholder="11.0.0"></label>
+                        <label>Device OS<input name="deviceOs" placeholder="Android 14"></label>
+                        <label>Device Model<input name="deviceModel" placeholder="Pixel 8"></label>
+                        <label>Region<input name="locationRegion" required value="Bangalore"></label>
+                        <label>Customization Tag<input name="customizationTag" value="enterprise"></label>
+                        <label>Device Group<input name="deviceGroup" value="drivers-west"></label>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Process Heartbeat</button>
+                </form>
+
+                <form id="statusForm">
+                    <h3>Send Update Lifecycle Status</h3>
+                    <div class="form-grid two">
+                        <label>IMEI<input name="imeiNumber" required value="356789012349999"></label>
+                        <label>Status
+                            <select name="status">
+                                <option>UPDATE_SCHEDULED</option>
+                                <option>DEVICE_NOTIFIED</option>
+                                <option>DOWNLOAD_STARTED</option>
+                                <option>DOWNLOAD_COMPLETED</option>
+                                <option>INSTALLATION_STARTED</option>
+                                <option>INSTALLATION_COMPLETED</option>
+                                <option>FAILED</option>
+                            </select>
+                        </label>
+                        <label>Schedule ID<input name="scheduleId" type="number" placeholder="Optional"></label>
+                        <label>From Version<input name="fromVersion" placeholder="Optional"></label>
+                        <label>To Version<input name="toVersion" placeholder="Optional"></label>
+                        <label>Failure Stage<input name="failureStage" placeholder="Optional"></label>
+                        <label>Failure Reason<input name="failureReason" placeholder="Optional"></label>
+                    </div>
+                    <button class="btn btn-secondary" type="submit">Send Status</button>
+                </form>
+
+                <div class="tip">
+                    Tip: send heartbeat first, then send lifecycle statuses to see audit trail update instantly.
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <section class="layout">
+        <article class="card panel-enter">
+            <div class="title-row">
+                <h2>Ops Snapshot</h2>
+                <div class="button-row">
+                    <label>Inactive Minutes
+                        <input id="inactiveMinutes" type="number" min="1" value="60">
+                    </label>
+                    <button id="refreshDashboardBtn" class="btn btn-primary">Refresh</button>
+                </div>
+            </div>
+            <div class="metrics">
+                <div class="metric">
+                    <p>Total Devices</p>
+                    <strong id="metricTotal">0</strong>
+                </div>
+                <div class="metric">
+                    <p>Active Devices</p>
+                    <strong id="metricActive">0</strong>
+                </div>
+                <div class="metric">
+                    <p>Inactive Devices</p>
+                    <strong id="metricInactive">0</strong>
+                </div>
+                <div class="metric">
+                    <p>Successful Updates</p>
+                    <strong id="metricSuccess">0</strong>
+                </div>
+                <div class="metric">
+                    <p>Failed Updates</p>
+                    <strong id="metricFailure">0</strong>
+                </div>
+                <div class="metric">
+                    <p>Pending Updates</p>
+                    <strong id="metricPending">0</strong>
+                </div>
+                <div class="metric">
+                    <p>Rollout Progress %</p>
+                    <strong id="metricRollout">0</strong>
+                </div>
+                <div class="metric">
+                    <p>Success Rate %</p>
+                    <strong id="metricSuccessRate">0</strong>
+                </div>
+                <div class="metric">
+                    <p>Failure Rate %</p>
+                    <strong id="metricFailureRate">0</strong>
+                </div>
+            </div>
+            <div class="split">
+                <div>
+                    <h3>Version Distribution</h3>
+                    <div id="versionBars" class="bars"></div>
+                </div>
+                <div>
+                    <h3>Region Distribution</h3>
+                    <div id="regionBars" class="bars"></div>
+                </div>
+                <div>
+                    <h3>Device Group Distribution</h3>
+                    <div id="groupBars" class="bars"></div>
+                </div>
+                <div>
+                    <h3>Failure Stage Distribution</h3>
+                    <div id="failureStageBars" class="bars"></div>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <h3>Version Heatmap (Region x Version)</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Region</th>
+                        <th>Version Mix</th>
+                    </tr>
+                    </thead>
+                    <tbody id="heatmapBody"></tbody>
+                </table>
+            </div>
+        </article>
+
+        <article class="card panel-enter">
+            <div class="title-row">
+                <h2>Schedule Ledger</h2>
+                <button id="refreshSchedulesBtn" class="btn btn-secondary">Reload Schedules</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Region</th>
+                        <th>Device Group</th>
+                        <th>Rollout</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                        <th>Last Event</th>
+                        <th>Last Event At</th>
+                        <th>Success/Fail</th>
+                    </tr>
+                    </thead>
+                    <tbody id="schedulesBody"></tbody>
+                </table>
+            </div>
+        </article>
+    </section>
+
+    <section class="layout">
+        <article class="card panel-enter">
+            <div class="title-row">
+                <h2>Audit Timeline</h2>
+                <div class="button-row">
+                    <label>IMEI
+                        <input id="auditImei" type="text" value="356789012349999">
+                    </label>
+                    <button id="refreshAuditBtn" class="btn btn-secondary">Load Audit</button>
+                </div>
+            </div>
+            <ul id="auditList" class="timeline"></ul>
+        </article>
+
+        <article class="card panel-enter">
+            <div class="title-row">
+                <h2>API Console</h2>
+                <button id="clearConsoleBtn" class="btn btn-ghost">Clear</button>
+            </div>
+            <pre id="consoleOutput" class="console"></pre>
+        </article>
+    </section>
+</main>
+
+<script src="./assets/dashboard.js"></script>
+</body>
+</html>
